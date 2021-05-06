@@ -25,18 +25,12 @@ class ServerSocket:
         client_connection = None
         client_address = None
         for i in range(len(peers)):
-            print('server socket my id =', self.peer_id, 'step ->', i)
+            # print('server socket my id =', self.peer_id, 'step ->', i)
             client_connection, client_address = s.accept()
-
             connected_id = client_connection.recv(1024).decode()
-            print('myid ->', self.peer_id, 'connected id ->', connected_id)
+            # print('myid ->', self.peer_id, 'connected id ->', connected_id)
 
             self.sockets.append(client_connection)
-        
-        # while True:
-        #     req = client_connection.recv(1024).decode()
-
-        #     print('a', req)
 
 
     def listen():

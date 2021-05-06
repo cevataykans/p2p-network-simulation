@@ -2,7 +2,6 @@ import socket
 import threading
 
 from constants import BASE_PORT
-from time import sleep
 
 
 class ClientSocket:
@@ -13,26 +12,19 @@ class ClientSocket:
         self.sockets = []
 
         self.t = threading.Thread(target=self.setup, args=(peers,))
-        # sleep(60)
         self.t.start()
     
     def setup(self, peers):
         for peer in peers:
-            print('client socket my id =', self.peer_id, 'step ->', peer)
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.setblocking(True)
-            cnt = 0
+            # print('client socket my id =', self.peer_id, 'step ->', peer)
+            s = None
             while True:
                 try:
+                    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     s.connect((self.ip_to_listen, peer + BASE_PORT))
                     break
-                except Exception as e:
-                    if cnt < 5:
-                        cnt += 1
-                        print(e)
-                    # print('trying to connect to ', peer)
-                    pass
-            print('end while')
+                except:
+                    s.close()
 
             s.sendall(bytes(str(self.peer_id), 'utf-8'))
 
