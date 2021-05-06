@@ -1,0 +1,3 @@
+IN = 'IN'
+OUT = 'OUT'
+BASE_PORT = 60000
