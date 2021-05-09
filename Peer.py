@@ -20,31 +20,29 @@ class Peer:
         self.server_socket.t.join()
         self.client_socket.t.join()
 
-        print('setup completed') # TODO
-        
-        # TODO authanticate
-
         # wait until the next minute mark
         current_second = datetime.datetime.now().second
         time.sleep(60 - current_second)
-
 
         # send messages
         self.server_socket.start_listen()
 
         for i in range(7):
-            print('Step =', i)
             self.client_socket.start_flood()
             time.sleep(WAIT_TIME)
+            try:
+                self.client_socket.t.join()
+            except:
+                pass
 
         self.client_socket.send_exit_message()
-        
-        self.server_socket.print_table()
-        
+
         try:
             self.server_socket.t.join()
         except:
             pass
+        
+        self.server_socket.print_table()
 
         self.client_socket.close()
         self.server_socket.close()

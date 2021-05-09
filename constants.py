@@ -1,7 +1,7 @@
 IN = 'IN'
 OUT = 'OUT'
 BASE_PORT = 60000
-TOPOLOGY_FILE = 'OverlayNetworkTopology.txt'
+TOPOLOGY_FILE = 'my.txt'
 FLOD = 'FLOD'
 USER = 'USER'
 PASS = 'PASS'

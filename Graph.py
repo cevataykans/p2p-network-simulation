@@ -28,11 +28,13 @@ class Graph:
                     self.graph[IN][nodes[1]] = []
 
                 self.graph[IN][nodes[1]].append(int(nodes[0]))
-            
-            print(self.graph)
     
     def get_out_peer_ids(self):
-        return self.graph[OUT][self.peer_id]
+        if self.peer_id in self.graph[OUT]:
+            return self.graph[OUT][self.peer_id]
+        return []
 
     def get_in_peer_ids(self):
-        return self.graph[IN][self.peer_id]
+        if self.peer_id in self.graph[IN]:
+            return self.graph[IN][self.peer_id]
+        return []

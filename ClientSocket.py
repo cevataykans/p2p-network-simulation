@@ -11,13 +11,13 @@ class ClientSocket:
         self.ip_to_listen = ip_to_listen
         self.peer_id = peer_id
         self.sockets = []
+        self.lock = threading.Lock()
 
         self.t = threading.Thread(target=self.setup, args=(peers,))
         self.t.start()
     
     def setup(self, peers):
         for peer in peers:
-            # print('client socket my id =', self.peer_id, 'step ->', peer)
             s = None
             while True:
                 try:
@@ -27,23 +27,31 @@ class ClientSocket:
                 except:
                     s.close()
 
-            s.sendall(bytes(str(self.peer_id), 'utf-8'))
-
-            self.sockets.append(s)
+            if self.authenticate(s, peer):
+                self.sockets.append(s)
+                print('TCP connection established with peer {}.'.format(peer))
+                print('Authenticated to peer {}.'.format(peer))
+            else:
+                s.close()
+    
+    def authenticate(self, socket, peer):
+        # TODO authenticate
+        return True
 
     def start_flood(self):
         self.t = threading.Thread(target=self.send_message)
         self.t.start()
     
     def send_message(self, msg=None):
+        self.lock.acquire()
         if msg is None:
             now = datetime.datetime.now()
             timestamp = str(now.hour) + ':' + str(now.minute) + ':' + str(now.second)
             msg = FLOD + ' ' + str(self.peer_id) + ' ' + timestamp + '\r\n'
 
         for s in self.sockets:
-            # print('Sending message :', msg)
             s.sendall(bytes(msg, 'utf-8'))
+        self.lock.release()
     
     def send_exit_message(self):
         msg = EXIT + '\r\n'

@@ -28,10 +28,7 @@ class ServerSocket:
         client_connection = None
         client_address = None
         for i in range(len(peers)):
-            # print('server socket my id =', self.peer_id, 'step ->', i)
             client_connection, client_address = s.accept()
-            connected_id = client_connection.recv(1024).decode()
-            # print('myid ->', self.peer_id, 'connected id ->', connected_id)
 
             self.sockets.append(client_connection)
 
@@ -42,43 +39,63 @@ class ServerSocket:
 
     def listen_message(self):
         exit_counter = 0
-        while exit_counter < len(self.sockets):
+        socket_count = len(self.sockets)
+        while exit_counter < socket_count:
             for s in self.sockets:
                 try:
-                    msg = s.recv(1024).decode()
-                    msg = msg[:-2]
-                    print('Received msg :', msg)
+                    msg_str = s.recv(1024).decode()
+                    if msg_str != '':
+                        msg_list = msg_str.split('\r\n')[:-1]
+                        print('Received msg list:', msg_list)
+                        for msg in msg_list:
+                            # TODO parse
+                            # TODO respond to auth
 
-                    if msg != '':
-                        # TODO parse
-                        # TODO respond to auth
+                            msg_keywords = msg.split(' ')
 
-                        msg_keywords = msg.split(' ')
+                            # print('splitted msg :', msg_keywords)
 
-                        print('splitted msg :', msg_keywords)
+                            if msg_keywords[0] == FLOD:
+                                recv_id = msg_keywords[1]
+                                recv_timestamp = msg_keywords[2]
+                                key = recv_id + '#' + recv_timestamp
 
-                        if msg_keywords[0] == FLOD:
-                            recv_id = msg_keywords[1]
-                            recv_timestamp = msg_keywords[2]
-                            key = recv_id + '#' + recv_timestamp
-
-                            if key not in self.message_table:
-                                # print('Forwarding key :', key)
-                                if recv_id != self.peer_id:
-                                    self.client_socket.send_message(msg + '\r\n')
-                                self.message_table[key] = 0
+                                if key not in self.message_table:
+                                    # print('Forwarding key :', key)
+                                    if recv_id != str(self.peer_id):
+                                        self.client_socket.send_message(msg + '\r\n')
+                                    self.message_table[key] = 0
+                                
+                                self.message_table[key] += 1
                             
-                            self.message_table[key] += 1
-                        
-                        elif msg_keywords[0] == EXIT:
-                            print('Exit received, need :', len(self.sockets))
-                            exit_counter += 1
+                            elif msg_keywords[0] == EXIT:
+                                exit_counter += 1
+                                print('Exit received, counter :', exit_counter, ' need :', socket_count - exit_counter)
+                                if exit_counter == socket_count:
+                                    break
                 except Exception as e:
                     print('Exception in server while listening to client :', e)
+        
+        print('End server')
     
     def close(self):
         for s in self.sockets:
             s.close()
     
     def print_table(self):
-        print(self.message_table)
+        def comparator(item):
+            ss = item[1].split(':')
+            val = int(ss[0]) * 60 * 60 + int(ss[1]) * 60 + int(ss[2])
+            val *= 1000
+            val += int(item[0])
+            return val
+
+        res = []
+        for k, v in self.message_table.items():
+            id, timestamp = k.split('#')
+            res.append((id, timestamp, v))
+        
+        res.sort(key=comparator)
+
+        for item in res:
+            print(item[0], '\t|\t', item[1], '\t|\t', item[2])
