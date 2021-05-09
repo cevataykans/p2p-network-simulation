@@ -12,7 +12,7 @@ class Graph:
     def read_topology(self, filename):
         with open(filename) as f:
             graph_str = f.read()
-            lines = graph_str.split('\n')
+            lines = graph_str.split('\n') # TODO
 
             self.peer_count = int(lines[0])
 

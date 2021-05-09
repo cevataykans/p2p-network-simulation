@@ -1,3 +1,9 @@
 IN = 'IN'
 OUT = 'OUT'
 BASE_PORT = 60000
+TOPOLOGY_FILE = 'OverlayNetworkTopology.txt'
+FLOD = 'FLOD'
+USER = 'USER'
+PASS = 'PASS'
+EXIT = 'EXIT'
+WAIT_TIME = 5
