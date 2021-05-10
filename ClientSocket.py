@@ -2,7 +2,7 @@ import socket
 import threading
 import datetime
 
-from constants import BASE_PORT, FLOD, EXIT
+from constants import BASE_PORT, FLOD, EXIT, USER, PASS, DEF_USERNAME, DEF_PASSWORD, OK
 
 
 class ClientSocket:
@@ -35,8 +35,21 @@ class ClientSocket:
                 s.close()
     
     def authenticate(self, socket, peer):
-        # TODO authenticate
-        return True
+        msg = USER + ' ' + DEF_USERNAME + '\r\n' + PASS + ' ' + DEF_PASSWORD + '\r\n'
+        socket.sendall(bytes(msg, 'utf-8'))
+
+        res = ''
+        while True:
+            res = socket.recv(1024).decode()
+            if res != '':
+                break
+
+        res = res[:-2].split(' ')
+        if res[0] == OK:
+            return True
+        
+        # print('Authentication Failed:', res[1])
+        return False
 
     def start_flood(self):
         self.t = threading.Thread(target=self.send_message)

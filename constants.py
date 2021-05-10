@@ -1,9 +1,14 @@
 IN = 'IN'
 OUT = 'OUT'
 BASE_PORT = 60000
-TOPOLOGY_FILE = 'my.txt'
+TOPOLOGY_FILE = 'OverlayNetworkTopology.txt'
 FLOD = 'FLOD'
 USER = 'USER'
 PASS = 'PASS'
 EXIT = 'EXIT'
 WAIT_TIME = 5
+OK = 'OK'
+INVALID = 'INVALID'
+
+DEF_USERNAME = 'bilkentstu'
+DEF_PASSWORD = 'cs421s2021'
