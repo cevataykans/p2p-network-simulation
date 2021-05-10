@@ -1,5 +1,3 @@
-import platform
-
 from constants import IN, OUT
 
 class Graph:
@@ -14,12 +12,7 @@ class Graph:
     def read_topology(self, filename):
         with open(filename) as f:
             graph_str = f.read()
-
-            lines = []
-            if platform.system() == 'Windows':
-                lines = graph_str.split('\r\n')
-            else:
-                lines = graph_str.split('\n')
+            lines = graph_str.split('\n')
 
             self.peer_count = int(lines[0])
 
