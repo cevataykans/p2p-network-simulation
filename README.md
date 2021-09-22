@@ -1,4 +1,4 @@
-# peer-2-peer-network-simulation
+# p2p-network-simulation
 
 I collaborated with my dear colleague [Yusuf](https://github.com/ynsengun) for this simulation.
 
@@ -10,4 +10,4 @@ We pair-programmed the entire project with [Yusuf](https://github.com/ynsengun).
 
 ## How to Use
 
-Please check the instructions provided in the [project description file]().
+Please check the instructions provided in the [project description file](https://github.com/cevataykans/p2p-network-simulation/blob/master/CS421_2021SPRING_PA2_Final.pdf).
